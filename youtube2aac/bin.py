@@ -33,6 +33,8 @@ from oauth2client import file
 from oauth2client import client
 from oauth2client import tools
 from pytoolbox.filesystem import try_makedirs
+#import pafy
+#from youtube_dl.YoutubeDL import YoutubeDL
 
 
 description = u'Download and convert to AAC your favorite songs.'
@@ -86,6 +88,9 @@ def main():
         print(u'Retrieved {0} likes from your activity in YouTube.'.format(len(likes)))
         with open(config_path(u'likes.json'), u'w', u'utf-8') as f:
             f.write(json.dumps(likes))
+        for like in likes:
+            print(like)
+            #YoutubeDL() or pafy
         print(u'Success!')
 
     except client.AccessTokenRefreshError:
