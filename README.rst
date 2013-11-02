@@ -72,17 +72,17 @@ How to use it ?
 Here is list of the functionalities available through the command line (see all files called ``bin.py``).
 
 :github-clone-starred: Clone the repositories your starred on GitHub_.
+:sharepics-export-albums: Generate or update albums metadata file metadata.yml (e.g. set UUID).
+:sharepics-generate-albums-metadata: Generate or update albums and pictures metadatas.
+:sharepics-mount-photos-svn: Install and configure davfs2 to mount the subversion repository of our family's pictures.
 :youtube-download-likes: Download the video you liked on YouTube_, can also convert them to AAC (songs).
 
-Sharepics
-=========
+---------------
+About Sharepics
+---------------
 
 SharePics_ is a Web application to share pictures with family and friends.
-This project made available some tools for this project (and also mine):
-
-* *sharepics-export-albums*: Generate or update albums metadata file metadata.yml (e.g. set UUID).
-* *sharepics-generate-albums-metadata*: Generate or update albums and pictures metadatas.
-* *sharepics-mount-photos-svn*: Install and configure davfs2 to mount the subversion repository of our family's pictures.
+This project made available some tools for this project (and also mine).
 
 ----
 
