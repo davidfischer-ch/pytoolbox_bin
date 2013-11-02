@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 #**********************************************************************************************************************#
-#                             YOUTUBE 2 AAC - DOWNLOAD AND CONVERT TO AAC YOUR FAVORITE SONGS
+#                    PYTOOLBOX BIN - PERSONAL UTILITY SCRIPTS BASED ON PYTOOLBOX AND OTHER GOODIES
 #
 #  Main Developer : David Fischer (david.fischer.ch@gmail.com)
 #  Copyright      : Copyright (c) 2013 David Fischer. All rights reserved.
 #
 #**********************************************************************************************************************#
 #
-# This file is part of David Fischer's youtube2aac Project.
+# This file is part of David Fischer's pytoolbox_bin Project.
 #
 # This project is free software: you can redistribute it and/or modify it under the terms of the EUPL v. 1.1 as provided
 # by the European Commission. This project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@
 # If not, see he EUPL licence v1.1 is available in 22 languages:
 #     22-07-2013, <https://joinup.ec.europa.eu/software/page/eupl/licence-eupl>
 #
-# Retrieved from https://github.com/davidfischer-ch/youtube2aac.git
+# Retrieved from https://github.com/davidfischer-ch/pytoolbox_bin.git
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -29,9 +29,6 @@ import sys
 from codecs import open
 from pip.req import parse_requirements
 from setuptools import setup, find_packages
-
-# FIXME import from bin.py
-description = u'Download and convert to AAC your favorite songs.'
 
 major, minor = sys.version_info[:2]
 kwargs = {}
@@ -67,21 +64,37 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Unix
 """
 
+def find_data_files():
+    # FIXME todo
+    return [
+        'etc/davfs2.conf', 'etc/server.pem'
+    ]
+
+def find_console_scripts():
+    # FIXME todo
+    return [
+        'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
+        'sharepics-export-albums=pytoolbox_bin.sharepics.bin:export_albums',
+        'sharepics-generate-albums-metadatas=pytoolbox_bin.sharepics.bin:generate_albums_metadatas',
+        'sharepics-mount-photos-svn=pytoolbox_bin.sharepics.bin:mount_photos_svn',
+    ]
+
 packages = find_packages()
 packages.remove('tests')
-setup(name='youtube2aac',
+setup(name='pytoolbox_bin',
       version='0.1',
       packages=packages,
-      description=description,
+      description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
       author='David Fischer',
       author_email='david.fischer.ch@gmail.com',
-      url='https://github.com/davidfischer-ch/sharepics-utils',
+      url='https://github.com/davidfischer-ch/pytoolbox_bin',
       license='EUPL 1.1',
       classifiers=filter(None, classifiers.split('\n')),
-      keywords=['download', 'gdata', 'songs', 'youtube'],
+      keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
       install_requires=[str(requirement.req) for requirement in parse_requirements('REQUIREMENTS.txt')],
+      data_files=[('/etc/pytoolbox_bin', find_data_files())],
       tests_require=['coverage', 'mock', 'nose'],
-      entry_points={'console_scripts': ['youtube2aac=youtube2aac.bin:main']},
+      entry_points={'console_scripts': find_console_scripts()},
       # Thanks to https://github.com/graingert/django-browserid/commit/46c763f11f76b2f3ba365b164196794a37494f44
-      test_suite='tests.youtube2aac_runtests.main', **kwargs)
+      test_suite='tests.pytoolbox_bin_runtests.main', **kwargs)
