@@ -49,9 +49,8 @@ def export_albums():
     HELP_PATH = u'Pictures base path'
     HELP_DEST = u'Pictures destination path'
     HELP_SIZE = u'Pictures thumbnails size'
-    EPILOG = export_albums.__doc__
 
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=EPILOG)
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=export_albums.__doc__)
     parser.add_argument(u'path', help=HELP_PATH, default=None)
     parser.add_argument(u'dest', help=HELP_DEST, default=None)
     parser.add_argument(u'-s', u'--size', help=HELP_SIZE, nargs=2, type=int, default=(512, 512))
@@ -90,9 +89,8 @@ def generate_albums_metadatas():
     configure_unicode()
     HELP_FORCE = u'Force overwrite of any already existing metadatas'
     HELP_PATH = u'Pictures base path'
-    EPILOG = generate_albums_metadatas.__doc__
 
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=EPILOG)
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=generate_albums_metadatas.__doc__)
     parser.add_argument(u'-f', u'--force', help=HELP_FORCE, action=u'store_true')
     parser.add_argument(u'path', help=HELP_PATH, default=None)
     args = parser.parse_args()
@@ -148,12 +146,11 @@ def mount_photos_svn():
 
     HELP_URL, DEFAULT_URL = u'Pictures repository', u'https://claire-et-david.dyndns.org/nous/Photos'
     HELP_PATH, DEFAULT_PATH = u'Mount point', abspath(expanduser(u'~/PhotosSVN'))
-    EPILOG = mount_photos_svn.__doc__
 
     if not os.geteuid() == 0:
         print_error(u'Only root can run this script.')
 
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=EPILOG)
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=mount_photos_svn.__doc__)
     parser.add_argument(u'login',    action=u'store')
     parser.add_argument(u'password', action=u'store')
     parser.add_argument(u'-u', u'--url',  action=u'store', help=HELP_URL,  default=DEFAULT_URL)

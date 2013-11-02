@@ -46,11 +46,9 @@ def download_likes():
 
     configure_unicode()
     HELP_OUTPUT = u'Download directory'
-    DEFAULT_OUTPUT = abspath(expanduser(u'~/pytoolbox_bin'))
-    EPILOG = download_likes.__doc__
-
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter, epilog=EPILOG, parents=[tools.argparser])
+    DEFAULT_OUTPUT = abspath(expanduser(u'~/youtube_likes'))
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     epilog=download_likes.__doc__, parents=[tools.argparser])
     parser.add_argument(u'-o', u'--output', action=u'store', help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
     args = parser.parse_args(sys.argv[1:])
     update = True  # FIXME add as argument to parser
