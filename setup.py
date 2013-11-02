@@ -73,6 +73,7 @@ def find_data_files():
 def find_console_scripts():
     # FIXME todo
     return [
+        'github-clone-starred=pytoolbox_bin.github.bin:clone_starred',
         'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
         'sharepics-export-albums=pytoolbox_bin.sharepics.bin:export_albums',
         'sharepics-generate-albums-metadatas=pytoolbox_bin.sharepics.bin:generate_albums_metadatas',

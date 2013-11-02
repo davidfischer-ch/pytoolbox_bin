@@ -109,7 +109,7 @@ def download_likes():
         if exists(thumbnail_path):
             print(u'Skip already downloaded video {0}'.format(video_title))
         else:
-            print(u'Download video {0}'.format(video_title))
+            print(u'Downloading video {0}'.format(video_title))
             download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
             ydl = YoutubeDL({u'outtmpl': output_path(u'%(title)s_%(id)s')})  # u'simulate': True,
             ydl.add_default_info_extractors()
