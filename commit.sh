@@ -1,15 +1,14 @@
-#! /usr/bin/env python
-# -*- coding: utf-8 -*-
+#!/usr/bin/env bash
 
 #**********************************************************************************************************************#
-#                             YOUTUBE 2 AAC - DOWNLOAD AND CONVERT TO AAC YOUR FAVORITE SONGS
+#                    PYTOOLBOX BIN - PERSONAL UTILITY SCRIPTS BASED ON PYTOOLBOX AND OTHER GOODIES
 #
 #  Main Developer : David Fischer (david.fischer.ch@gmail.com)
 #  Copyright      : Copyright (c) 2013 David Fischer. All rights reserved.
 #
 #**********************************************************************************************************************#
 #
-# This file is part of David Fischer's youtube2aac Project.
+# This file is part of David Fischer's pytoolbox_bin Project.
 #
 # This project is free software: you can redistribute it and/or modify it under the terms of the EUPL v. 1.1 as provided
 # by the European Commission. This project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,11 +20,15 @@
 # If not, see he EUPL licence v1.1 is available in 22 languages:
 #     22-07-2013, <https://joinup.ec.europa.eu/software/page/eupl/licence-eupl>
 #
-# Retrieved from https://github.com/davidfischer-ch/youtube2aac.git
+# Retrieved from https://github.com/davidfischer-ch/pytoolbox_bin.git
 
-def main():
-    from pytoolbox.unittest import runtests
-    return runtests(__file__, cover_packages=[u'youtube2aac'], packages=[u'youtube2aac'])
+warning()
+{
+    echo "[WARNING] $1" 1>&2
+    echo 'press enter to continue or ctrl+c to exit ...'
+    read a
+}
 
-if __name__ == u'__main__':
-    main()
+sudo python2 setup.py test || warning 'Python 2 unit-test of pytoolbox failed'
+sudo python3 setup.py test || warning 'Python 3 unit-test of pytoolbox failed'
+git commit

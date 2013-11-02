@@ -129,8 +129,7 @@ def quality(mime_type, ranges):
     Returns the quality 'q' of a mime-type when compared against the
     media-ranges in ranges. For example:
 
-    >>> quality('text/html','text/*;q=0.3, text/html;q=0.7,
-                  text/html;level=1, text/html;level=2;q=0.4, */*;q=0.5')
+    >>> quality('text/html','text/*;q=0.3, text/html;q=0.7, text/html;level=1, text/html;level=2;q=0.4, */*;q=0.5')
     0.7
 
     """
@@ -149,8 +148,7 @@ def best_match(supported, header):
     in order of increasing desirability, in case of a situation where there is
     a tie.
 
-    >>> best_match(['application/xbel+xml', 'text/xml'],
-                   'text/*;q=0.5,*/*; q=0.1')
+    >>> best_match(['application/xbel+xml', 'text/xml'], 'text/*;q=0.5,*/*; q=0.1')
     'text/xml'
     """
     split_header = _filter_blank(header.split(','))

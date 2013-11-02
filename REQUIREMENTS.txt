@@ -1,7 +1,10 @@
 #apiclient
+git+git://github.com/github.com/sigmavirus24/github3.py.git#egg=github3.py
 google-api-python-client
 httplib2
 oauth2client
 pafy
+pillow>=2.2.1
+pyaml>=13.05.2
 pytoolbox
 youtube-dl
