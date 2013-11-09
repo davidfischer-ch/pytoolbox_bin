@@ -68,13 +68,13 @@ def clone_starred():
         if exists(directory):
             if args.fetch:
                 print(u'Fetching already cloned repository {0}'.format(repository.full_name))
-                cmd([u'git', u'fetch', directory])
+                cmd([u'git', u'fetch'], cwd=directory, log=print)
             else:
                 print(u'Skip already cloned repository {0}'.format(repository.full_name))
         else:
             print(u'Cloning repository {0}'.format(repository.full_name))
             try:
-                cmd([u'git', u'clone', repository.clone_url, directory])
+                cmd([u'git', u'clone', repository.clone_url, directory], log=print)
             except KeyboardInterrupt:
                 shutil.rmtree(directory, ignore_errors=True)
 
