@@ -25,5 +25,4 @@
 from os.path import expanduser, join
 
 
-etc_path = lambda *x: join(u'/etc/pytoolbox_bin', *x)
 config_path = lambda *x: join(expanduser(u'~/.pytoolbox_bin'), *x)

@@ -4,9 +4,6 @@ python:
   - "2.7"
   - "3.2"
   - "3.3"
-install:
-  - sudo apt-get -y build-dep python-imaging
-  - sudo apt-get -y install python-pyexiv2
 script:
   - sudo python setup.py test
 matrix:
