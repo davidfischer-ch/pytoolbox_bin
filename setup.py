@@ -64,20 +64,11 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Unix
 """
 
-def find_data_files():
-    # FIXME todo
-    return [
-        'etc/davfs2.conf', 'etc/server.pem'
-    ]
-
 def find_console_scripts():
     # FIXME todo
     return [
         'github-clone-starred=pytoolbox_bin.github.bin:clone_starred',
         'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
-        'sharepics-export-albums=pytoolbox_bin.sharepics.bin:export_albums',
-        'sharepics-generate-albums-metadatas=pytoolbox_bin.sharepics.bin:generate_albums_metadatas',
-        'sharepics-mount-photos-svn=pytoolbox_bin.sharepics.bin:mount_photos_svn',
     ]
 
 packages = find_packages()
@@ -94,7 +85,6 @@ setup(name='pytoolbox_bin',
       classifiers=filter(None, classifiers.split('\n')),
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
       install_requires=[str(requirement.req) for requirement in parse_requirements('REQUIREMENTS.txt')],
-      data_files=[('/etc/pytoolbox_bin', find_data_files())],
       tests_require=['coverage', 'mock', 'nose'],
       entry_points={'console_scripts': find_console_scripts()},
       # Thanks to https://github.com/graingert/django-browserid/commit/46c763f11f76b2f3ba365b164196794a37494f44
