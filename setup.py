@@ -83,7 +83,7 @@ def find_console_scripts():
 packages = find_packages()
 packages.remove('tests')
 setup(name='pytoolbox_bin',
-      version='0.1',
+      version='0.1.1',
       packages=packages,
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),

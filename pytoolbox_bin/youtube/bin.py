@@ -104,15 +104,17 @@ def download_likes():
             print(u'The credentials have been revoked or expired, please re-run the app to re-authorize')
 
     for like in likes:
-        video_title, video_id = like[u'snippet'][u'title'], like[u'contentDetails'][u'like'][u'resourceId'][u'videoId']
-        thumbnail_path = output_path(u'{0}_thumbnails.jpg'.format(video_title))
+        video_title = like[u'snippet'][u'title']
+        video_id = like[u'contentDetails'][u'like'][u'resourceId'][u'videoId']
+        video_title_safe = video_title.replace(u'/', u'-')
+        thumbnail_path = output_path(video_title_safe + u'_thumbnails.jpg')
         if exists(thumbnail_path):
             print(u'Skip already downloaded video {0}'.format(video_title))
         else:
             print(u'Downloading video {0}'.format(video_title))
-            download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
-            ydl = YoutubeDL({u'outtmpl': output_path(u'%(title)s_%(id)s')})  # u'simulate': True,
+            ydl = YoutubeDL({u'outtmpl': output_path(video_title_safe + u'_' + video_id + u'.mp4')})
             ydl.add_default_info_extractors()
             ydl.download([video_id])
+            download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
 
     print(u'Success!')
