@@ -106,7 +106,7 @@ def download_likes():
     for like in likes:
         video_title = like[u'snippet'][u'title']
         video_id = like[u'contentDetails'][u'like'][u'resourceId'][u'videoId']
-        video_title_safe = video_title.replace(u'/', u'-')
+        video_title_safe = video_title.replace(u'/', u'-').replace(u'|', u'-')
         thumbnail_path = output_path(video_title_safe + u'_thumbnails.jpg')
         if exists(thumbnail_path):
             print(u'Skip already downloaded video {0}'.format(video_title))
