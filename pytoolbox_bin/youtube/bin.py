@@ -97,16 +97,21 @@ def download_likes():
                 page = response.get(u'nextPageToken')
                 if not page:
                     break
-            print(u'Retrieved {0} likes from your activity in YouTube.'.format(len(likes)))
+            print(u'Retrieved {0} likes from your activity in YouTube (some are probably duplicates).'.format(
+                  len(likes)))
             with open(likes_filename, u'w', u'utf-8') as f:
                 f.write(json.dumps(likes))
         except client.AccessTokenRefreshError:
             print(u'The credentials have been revoked or expired, please re-run the app to re-authorize')
 
+    videos_ids = set()
     for like in likes:
-        video_title = like[u'snippet'][u'title']
         video_id = like[u'contentDetails'][u'like'][u'resourceId'][u'videoId']
-        video_title_safe = video_title.replace(u'/', u'-').replace(u'|', u'-')
+        if video_id in videos_ids:
+            continue  # skip the duplicates
+        videos_ids.add(video_id)
+        video_title = like[u'snippet'][u'title']
+        video_title_safe = video_title.replace(u'/', u'-').replace(u'|', u'-').replace(u':', u'-')
         thumbnail_path = output_path(video_title_safe + u'_thumbnails.jpg')
         if exists(thumbnail_path):
             print(u'Skip already downloaded video {0}'.format(video_title))
@@ -117,4 +122,4 @@ def download_likes():
             ydl.download([video_id])
             download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
 
-    print(u'Success!')
+    print(u'Successfully downloaded {0} likes!'.format(len(videos_ids)))
