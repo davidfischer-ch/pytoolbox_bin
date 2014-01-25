@@ -119,7 +119,10 @@ def download_likes():
             print(u'Downloading video {0}'.format(video_title))
             ydl = YoutubeDL({u'outtmpl': output_path(video_title_safe + u'_' + video_id + u'.mp4')})
             ydl.add_default_info_extractors()
-            ydl.download([video_id])
-            download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
+            try:
+                ydl.download([video_id])
+                download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
+            except Exception as e:
+                print(u'Download failed, reason: {0}'.format(repr(e)), file=sys.stderr)
 
     print(u'Successfully downloaded {0} likes!'.format(len(videos_ids)))
