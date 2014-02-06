@@ -42,13 +42,13 @@ def download_likes():
     u"""Download and convert to AAC your favorite songs."""
 
     configure_unicode()
-    HELP_OUTPUT = u'Download directory'
-    DEFAULT_OUTPUT = abspath(expanduser(u'~/youtube_likes'))
+    HELP_OUTPUT, DEFAULT_OUTPUT = u'Download directory', abspath(expanduser(u'~/youtube_likes'))
+    HELP_UPDATE, DEFAULT_UPDATE = u'Request the likes with the YouTube API', True
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      epilog=download_likes.__doc__, parents=[tools.argparser])
-    parser.add_argument(u'-o', u'--output', action=u'store', help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
+    parser.add_argument(u'-o', u'--output', action=u'store',      help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
+    parser.add_argument(u'-u', u'--update', action=u'store_true', help=HELP_UPDATE, default=DEFAULT_UPDATE)
     args = parser.parse_args(sys.argv[1:])
-    update = True  # FIXME add as argument to parser
 
     output_path = lambda *x: join(abspath(expanduser(args.output)), *x)
     try_makedirs(config_path(u''))
@@ -77,36 +77,34 @@ def download_likes():
     http = credentials.authorize(httplib2.Http())
     service = discovery.build(u'youtube', u'v3', http=http)
     likes_filename = config_path(u'likes.json')
-    try:
-        with open(likes_filename, u'r', u'utf-8') as f:
-            likes = json.loads(f.read())
-    except IOError:
-        likes = []
 
-    if not likes or update:
+    likes = []
+    if not args.update:
+        try:
+            with open(likes_filename, u'r', u'utf-8') as f:
+                likes = json.loads(f.read())
+        except IOError:
+            pass
+
+    if not likes:
         try:
             page = None
             while True:
-                print(u'read page {0}'.format(page))
-                response = service.activities().list(part=u'snippet,contentDetails', mine=True,
-                                                     maxResults=50, pageToken=page).execute()
-                likes += [item for item in response[u'items'] if u'like' in item[u'contentDetails']]
+                print(u'Read page {0}'.format(page))
+                response = service.videos().list(part=u'id,snippet', myRating=u'like', maxResults=50,
+                                                 pageToken=page).execute()
+                likes += response[u'items']
                 page = response.get(u'nextPageToken')
                 if not page:
                     break
-            print(u'Retrieved {0} likes from your activity in YouTube (some are probably duplicates).'.format(
-                  len(likes)))
+            print(u'Retrieved {0} likes from your activity in YouTube.'.format(len(likes)))
             with open(likes_filename, u'w', u'utf-8') as f:
                 f.write(json.dumps(likes))
         except client.AccessTokenRefreshError:
-            print(u'The credentials have been revoked or expired, please re-run the app to re-authorize')
+            print(u'The credentials have been revoked or expired, please re-run the application to re-authorize')
 
-    videos_ids = set()
     for like in likes:
-        video_id = like[u'contentDetails'][u'like'][u'resourceId'][u'videoId']
-        if video_id in videos_ids:
-            continue  # skip the duplicates
-        videos_ids.add(video_id)
+        video_id = like[u'id']
         video_title = like[u'snippet'][u'title']
         video_title_safe = video_title.replace(u'/', u'-').replace(u'|', u'-').replace(u':', u'-')
         thumbnail_path = output_path(video_title_safe + u'_thumbnails.jpg')
@@ -122,4 +120,4 @@ def download_likes():
             except Exception as e:
                 print(u'Download failed, reason: {0}'.format(repr(e)), file=sys.stderr)
 
-    print(u'Successfully downloaded {0} likes!'.format(len(videos_ids)))
+    print(u'Successfully downloaded {0} likes!'.format(len(likes)))
