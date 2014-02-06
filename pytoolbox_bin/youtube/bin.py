@@ -29,13 +29,10 @@ import argparse, httplib2, json, sys
 from os.path import abspath, exists, expanduser, join
 from codecs import open
 from apiclient import discovery
-from oauth2client import file
-from oauth2client import client
-from oauth2client import tools
+from oauth2client import client, file, tools
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs
 from youtube_dl.YoutubeDL import YoutubeDL
-
 
 from .lib import download
 from ..common import config_path
