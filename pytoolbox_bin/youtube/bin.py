@@ -25,16 +25,16 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import argparse, httplib2, json, sys
-from os.path import abspath, exists, expanduser, join
+import argparse, httplib2, os, json, sys
 from codecs import open
 from apiclient import discovery
 from oauth2client import client, file, tools
+from os.path import abspath, expanduser, join, splitext
 from pytoolbox.encoding import configure_unicode
-from pytoolbox.filesystem import try_makedirs
+from pytoolbox.filesystem import try_makedirs, try_remove
 from youtube_dl.YoutubeDL import YoutubeDL
 
-from .lib import download
+from .lib import download, remove_special_chars
 from ..common import config_path
 
 
@@ -44,10 +44,12 @@ def download_likes():
     configure_unicode()
     HELP_OUTPUT, DEFAULT_OUTPUT = u'Download directory', abspath(expanduser(u'~/youtube_likes'))
     HELP_UPDATE, DEFAULT_UPDATE = u'Request the likes with the YouTube API', True
+    HELP_THUMBNAIL, DEFAULT_THUMBNAIL = u'Download the thumbnails', False
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      epilog=download_likes.__doc__, parents=[tools.argparser])
-    parser.add_argument(u'-o', u'--output', action=u'store',      help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
-    parser.add_argument(u'-u', u'--update', action=u'store_true', help=HELP_UPDATE, default=DEFAULT_UPDATE)
+    parser.add_argument(u'-o', u'--output',    action=u'store',      help=HELP_OUTPUT,    default=DEFAULT_OUTPUT)
+    parser.add_argument(u'-t', u'--thumbnail', action=u'store_true', help=HELP_THUMBNAIL, default=DEFAULT_THUMBNAIL)
+    parser.add_argument(u'-u', u'--update',    action=u'store_true', help=HELP_UPDATE,    default=DEFAULT_UPDATE)
     args = parser.parse_args(sys.argv[1:])
 
     output_path = lambda *x: join(abspath(expanduser(args.output)), *x)
@@ -86,6 +88,11 @@ def download_likes():
         except IOError:
             pass
 
+    videos_names = set()
+    for root, dirnames, filenames in os.walk(output_path()):
+        for filename in filenames:
+            videos_names.add(unicode(splitext(filename)[0], u'utf-8'))
+
     if not likes:
         try:
             page = None
@@ -103,21 +110,30 @@ def download_likes():
         except client.AccessTokenRefreshError:
             print(u'The credentials have been revoked or expired, please re-run the application to re-authorize')
 
+    deleted_ids = set()
     for like in likes:
         video_id = like[u'id']
         video_title = like[u'snippet'][u'title']
-        video_title_safe = video_title.replace(u'/', u'-').replace(u'|', u'-').replace(u':', u'-')
-        thumbnail_path = output_path(video_title_safe + u'_thumbnails.jpg')
-        if exists(thumbnail_path):
+        video_name = remove_special_chars(video_title) + u'_' + video_id
+
+        if video_name in videos_names:
             print(u'Skip already downloaded video {0}'.format(video_title))
+        elif u'Deleted video' in video_name:
+            deleted_ids.add(video_id)
         else:
             print(u'Downloading video {0}'.format(video_title))
-            ydl = YoutubeDL({u'outtmpl': output_path(video_title_safe + u'_' + video_id + u'.mp4')})
+            video_path, thumbnail_path = output_path(video_name + u'.mp4'), output_path(video_name + u'.jpg')
+            ydl = YoutubeDL({u'outtmpl': video_path})
             ydl.add_default_info_extractors()
             try:
                 ydl.download([video_id])
-                download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
+                if args.thumbnail:
+                    download(like[u'snippet'][u'thumbnails'][u'high'][u'url'], thumbnail_path)
             except Exception as e:
                 print(u'Download failed, reason: {0}'.format(repr(e)), file=sys.stderr)
+                try_remove(video_path)
+                if args.thumbnail:
+                    try_remove(thumbnail_path)
 
     print(u'Successfully downloaded {0} likes!'.format(len(likes)))
+    print(u'There are {0} deleted likes: {1}'.format(len(deleted_ids), deleted_ids))

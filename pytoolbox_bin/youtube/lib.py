@@ -31,3 +31,8 @@ from codecs import open
 def download(url, filename):
     with open(filename, u'wb') as f:
         f.write(urllib2.urlopen(url).read())
+
+
+def remove_special_chars(filename):
+    return (filename.replace(u'?', u'').replace(u'"', u'').replace(u'/', u'-')
+                    .replace(u'|', u'-').replace(u':', u'-').replace(u'*', u'-'))
