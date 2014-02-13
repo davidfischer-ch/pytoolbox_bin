@@ -32,9 +32,10 @@ from oauth2client import client, file, tools
 from os.path import abspath, expanduser, join, splitext
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs, try_remove
+from pytoolbox.network.http import download
 from youtube_dl.YoutubeDL import YoutubeDL
 
-from .lib import download, remove_special_chars
+from .lib import remove_special_chars
 from ..common import config_path
 
 
