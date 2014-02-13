@@ -77,5 +77,3 @@ def clone_starred():
                 cmd([u'git', u'clone', repository.clone_url, directory], log=print)
             except KeyboardInterrupt:
                 shutil.rmtree(directory, ignore_errors=True)
-
-clone_starred()
