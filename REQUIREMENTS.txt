@@ -1,5 +1,4 @@
-#apiclient
-git+git://github.com/sigmavirus24/github3.py.git#egg=github3.py
+github3.py
 google-api-python-client
 httplib2
 oauth2client
@@ -7,4 +6,5 @@ git+git://github.com/davidfischer-ch/pafy.git#egg=pafy
 pillow>=2.2.1
 pyaml>=13.05.2
 pytoolbox>=6.1.1-beta
+twisted
 youtube-dl
