@@ -6,6 +6,12 @@
 Pytoolbox Bin
 =============
 
+.. image:: https://badge.fury.io/py/pytoolbox_bin.png
+    :target: http://badge.fury.io/py/pytoolbox_bin
+
+.. image:: https://pypip.in/d/pytoolbox_bin/badge.png
+    :target: https://crate.io/packages/pytoolbox_bin/
+
 .. image:: https://secure.travis-ci.org/davidfischer-ch/pytoolbox_bin.png
     :target: http://travis-ci.org/davidfischer-ch/pytoolbox_bin
 
