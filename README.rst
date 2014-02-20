@@ -72,6 +72,8 @@ Here is list of the functionalities available through the command line (see all 
 
 :github-clone-starred: Clone the repositories your starred on GitHub_.
 :youtube-download-likes: Download the video you liked on YouTube_, can also convert them to AAC (songs).
+:socket-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Socket-based implementation.
+:twisted-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Twisted-based implementation.
 
 ----
 

@@ -64,17 +64,10 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Unix
 """
 
-def find_console_scripts():
-    # FIXME todo
-    return [
-        'github-clone-starred=pytoolbox_bin.github.bin:clone_starred',
-        'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
-    ]
-
 packages = find_packages()
 packages.remove('tests')
 setup(name='pytoolbox_bin',
-      version='0.1.2',
+      version='0.2.0',
       packages=packages,
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
@@ -86,6 +79,13 @@ setup(name='pytoolbox_bin',
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
       install_requires=[str(requirement.req) for requirement in parse_requirements('REQUIREMENTS.txt')],
       tests_require=['coverage', 'mock', 'nose'],
-      entry_points={'console_scripts': find_console_scripts()},
+      entry_points={
+          'console_scripts': [
+              'github-clone-starred=pytoolbox_bin.github.bin:clone_starred',
+              'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
+              'socket-fec-generator=pytoolbox_bin.smpte2022.bin:socket_fec_generator',
+              'twisted-fec-generator=pytoolbox_bin.smpte2022.bin:twisted_fec_generator'
+          ]
+      },
       # Thanks to https://github.com/graingert/django-browserid/commit/46c763f11f76b2f3ba365b164196794a37494f44
       test_suite='tests.pytoolbox_bin_runtests.main', **kwargs)
