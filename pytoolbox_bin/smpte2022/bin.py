@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 #**********************************************************************************************************************#
-#                                        PYTOOLBOX - TOOLBOX FOR PYTHON SCRIPTS
+#                    PYTOOLBOX BIN - PERSONAL UTILITY SCRIPTS BASED ON PYTOOLBOX AND OTHER GOODIES
 #
 #  Main Developer : David Fischer (david.fischer.ch@gmail.com)
-#  Copyright      : Copyright (c) 2012-2013 David Fischer. All rights reserved.
+#  Copyright      : Copyright (c) 2013 David Fischer. All rights reserved.
 #
 #**********************************************************************************************************************#
 #
-# This file is part of David Fischer's pytoolbox Project.
+# This file is part of David Fischer's pytoolbox_bin Project.
 #
 # This project is free software: you can redistribute it and/or modify it under the terms of the EUPL v. 1.1 as provided
 # by the European Commission. This project is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -21,7 +21,7 @@
 # If not, see he EUPL licence v1.1 is available in 22 languages:
 #     22-07-2013, <https://joinup.ec.europa.eu/software/page/eupl/licence-eupl>
 #
-# Retrieved from https://github.com/davidfischer-ch/pytoolbox.git
+# Retrieved from https://github.com/davidfischer-ch/pytoolbox_bin.git
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
