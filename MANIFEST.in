@@ -1,0 +1,4 @@
+include AUTHORS
+include changelog
+include REQUIREMENTS.txt
+include *.rst
