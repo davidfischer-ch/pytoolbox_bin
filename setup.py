@@ -69,7 +69,7 @@ if 'tests' in packages:
     packages.remove('tests')
 
 setup(name='pytoolbox_bin',
-      version='0.2.1',
+      version='0.2.2',
       packages=packages,
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
