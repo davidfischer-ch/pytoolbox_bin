@@ -65,9 +65,11 @@ Operating System :: Unix
 """
 
 packages = find_packages()
-packages.remove('tests')
+if 'tests' in packages:
+    packages.remove('tests')
+
 setup(name='pytoolbox_bin',
-      version='0.2.0',
+      version='0.2.1',
       packages=packages,
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
