@@ -15,6 +15,9 @@ Pytoolbox Bin
 .. image:: https://secure.travis-ci.org/davidfischer-ch/pytoolbox_bin.png
     :target: http://travis-ci.org/davidfischer-ch/pytoolbox_bin
 
+.. image:: https://landscape.io/github/davidfischer-ch/pytoolbox_bin/master/landscape.png
+   :target: https://landscape.io/github/davidfischer-ch/pytoolbox_bin/master
+
 Afraid of red status ? Please click on the link, sometimes this is not my fault ;-)
 
 Personal utility scripts based on pytoolbox_ and other goodies.
