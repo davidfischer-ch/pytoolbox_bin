@@ -64,13 +64,9 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Unix
 """
 
-packages = find_packages()
-if 'tests' in packages:
-    packages.remove('tests')
-
 setup(name='pytoolbox_bin',
       version='0.2.2',
-      packages=packages,
+      packages=find_packages(exclude=['tests']),
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
       author='David Fischer',
