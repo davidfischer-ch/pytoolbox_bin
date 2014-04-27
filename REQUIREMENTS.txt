@@ -5,6 +5,6 @@ oauth2client
 git+git://github.com/davidfischer-ch/pafy.git#egg=pafy
 pillow>=2.2.1
 pyaml>=13.05.2
-pytoolbox>=6.1.1-beta
+pytoolbox[smpte2022]>=7.1.16-beta
 twisted
 youtube-dl
