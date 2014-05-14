@@ -57,8 +57,8 @@ class SocketFecGenerator(object):
     """
 
     DEFAULT_MEDIA = u'239.232.0.222:5004'
-    DEFAULT_COL = u'232.232.0.222:5006'
-    DEFAULT_ROW = u'232.232.0.222:5008'
+    DEFAULT_COL = u'239.232.0.222:5006'
+    DEFAULT_ROW = u'239.232.0.222:5008'
 
     def __init__(self, media_socket, col_socket, row_socket, L, D):
         u"""

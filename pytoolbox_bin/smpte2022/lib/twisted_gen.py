@@ -63,8 +63,8 @@ class TwistedFecGenerator(DatagramProtocol):
     """
 
     DEFAULT_MEDIA = u'239.232.0.222:5004'
-    DEFAULT_COL = u'127.0.0.1:5006'  # '232.232.0.222:5006'
-    DEFAULT_ROW = u'127.0.0.1:5008'  # '232.232.0.222:5008'
+    DEFAULT_COL = u'127.0.0.1:5006'  # '239.232.0.222:5006'
+    DEFAULT_ROW = u'127.0.0.1:5008'  # '239.232.0.222:5008'
 
     def __init__(self, group, name, col_socket, row_socket, L, D):
         u"""
