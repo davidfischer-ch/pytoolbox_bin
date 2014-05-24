@@ -65,7 +65,7 @@ Operating System :: Unix
 """
 
 setup(name='pytoolbox_bin',
-      version='0.2.3',
+      version='0.2.4-beta',
       packages=find_packages(exclude=['tests']),
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
@@ -75,7 +75,8 @@ setup(name='pytoolbox_bin',
       license='EUPL 1.1',
       classifiers=filter(None, classifiers.split('\n')),
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
-      install_requires=[str(requirement.req) for requirement in parse_requirements('REQUIREMENTS.txt')],
+      dependency_links=[str(requirement.url) for requirement in parse_requirements('requirements.txt')],
+      install_requires=[str(requirement.req) for requirement in parse_requirements('requirements.txt')],
       tests_require=['coverage', 'mock', 'nose'],
       entry_points={
           'console_scripts': [
