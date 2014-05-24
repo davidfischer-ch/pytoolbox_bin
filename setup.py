@@ -30,12 +30,6 @@ from codecs import open
 from pip.req import parse_requirements
 from setuptools import setup, find_packages
 
-major, minor = sys.version_info[:2]
-kwargs = {}
-if major >= 3:
-    print('Converting code to Python 3 helped by 2to3')
-    kwargs['use_2to3'] = True
-
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
 
 classifiers = """
@@ -87,4 +81,5 @@ setup(name='pytoolbox_bin',
           ]
       },
       # Thanks to https://github.com/graingert/django-browserid/commit/46c763f11f76b2f3ba365b164196794a37494f44
-      test_suite='tests.pytoolbox_bin_runtests.main', **kwargs)
+      test_suite='tests.pytoolbox_bin_runtests.main',
+      use_2to3=sys.version_info[0] > 2)
