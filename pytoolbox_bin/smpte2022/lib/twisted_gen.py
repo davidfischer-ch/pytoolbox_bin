@@ -29,12 +29,12 @@ from pytoolbox.network.rtp import RtpPacket
 from pytoolbox.network.smpte2022.generator import FecGenerator
 from twisted.internet.protocol import DatagramProtocol
 
-log = logging.getLogger(u'smpte2022lib')
+log = logging.getLogger('smpte2022lib')
 
 
 # FIXME send to multicast address fail (?)
 class TwistedFecGenerator(DatagramProtocol):
-    u"""
+    """
     A SMPTE 2022-1 FEC streams generator with network skills based on :mod:`twisted`.
 
     This generator listen to incoming RTP media stream, compute and output corresponding FEC streams.
@@ -47,8 +47,8 @@ class TwistedFecGenerator(DatagramProtocol):
     >>> media = IPSocket(TwistedFecGenerator.DEFAULT_MEDIA)
     >>> col = IPSocket(TwistedFecGenerator.DEFAULT_COL)
     >>> row = IPSocket(TwistedFecGenerator.DEFAULT_ROW)
-    >>> generator = TwistedFecGenerator(media[u'ip'], u'MyTwistedFecGenerator', col, row, 5, 6)
-    >>> reactor.listenMulticast(media[u'port'], generator, listenMultiple=True) # doctest: +ELLIPSIS
+    >>> generator = TwistedFecGenerator(media['ip'], 'MyTwistedFecGenerator', col, row, 5, 6)
+    >>> reactor.listenMulticast(media['port'], generator, listenMultiple=True) # doctest: +ELLIPSIS
     <....TwistedFecGenerator... on 5004>
     >>> print(generator._generator)
     Matrix size L x D            = 5 x 6
@@ -62,12 +62,12 @@ class TwistedFecGenerator(DatagramProtocol):
     Then you only need to start reactor with ``reactor.run()``.
     """
 
-    DEFAULT_MEDIA = u'239.232.0.222:5004'
-    DEFAULT_COL = u'127.0.0.1:5006'  # '239.232.0.222:5006'
-    DEFAULT_ROW = u'127.0.0.1:5008'  # '239.232.0.222:5008'
+    DEFAULT_MEDIA = '239.232.0.222:5004'
+    DEFAULT_COL = '127.0.0.1:5006'  # '239.232.0.222:5006'
+    DEFAULT_ROW = '127.0.0.1:5008'  # '239.232.0.222:5008'
 
     def __init__(self, group, name, col_socket, row_socket, L, D):
-        u"""
+        """
         Construct a TwistedFecGenerator.
 
         :param group: IP address of incoming RTP media stream
@@ -93,20 +93,20 @@ class TwistedFecGenerator(DatagramProtocol):
         self._generator.on_reset = self.on_reset
 
     def startProtocol(self):
-        log.info(u'SMPTE 2022-1 FEC Generator by David Fischer')
-        log.info(u'started Listening {0}'.format(self.group))
+        log.info('SMPTE 2022-1 FEC Generator by David Fischer')
+        log.info('started Listening {0}'.format(self.group))
         self.transport.joinGroup(self.group)
         self.transport.setLoopbackMode(False)
         self.transport.setTTL(1)
 
     def datagramReceived(self, datagram, socket):
         media = RtpPacket(bytearray(datagram), len(datagram))
-        log.debug(u'Incoming media packet seq={0} ts={1} psize={2} socket={3}'.format(
+        log.debug('Incoming media packet seq={0} ts={1} psize={2} socket={3}'.format(
                   media.sequence, media.timestamp, media.payload_size, socket))
         self._generator.put_media(media)
 
     def on_new_col(self, col, generator):
-        u"""
+        """
         Called by ``self=FecGenerator`` when a new column FEC packet is generated and available for output.
 
         Send the encapsulated column FEC packet.
@@ -117,14 +117,14 @@ class TwistedFecGenerator(DatagramProtocol):
         :type generator: FecGenerator
         """
         col_rtp = RtpPacket.create(col.sequence, 0, RtpPacket.DYNAMIC_PT, col.bytes)
-        log.debug(u'Send COL FEC packet seq={0} snbase={1} LxD={2}x{3} trec={4} socket={5}'.format(
+        log.debug('Send COL FEC packet seq={0} snbase={1} LxD={2}x{3} trec={4} socket={5}'.format(
                   col.sequence, col.snbase, col.L, col.D, col.timestamp_recovery, self.col_socket))
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-        sock.sendto(col_rtp.bytes, (self.col_socket[u'ip'], self.col_socket[u'port']))
+        sock.sendto(col_rtp.bytes, (self.col_socket['ip'], self.col_socket['port']))
 
     def on_new_row(self, row, generator):
-        u"""
+        """
         Called by ``self=FecGenerator`` when a new row FEC packet is generated and available for output.
 
         Send the encapsulated row FEC packet.
@@ -135,14 +135,14 @@ class TwistedFecGenerator(DatagramProtocol):
         :type generator: FecGenerator
         """
         row_rtp = RtpPacket.create(row.sequence, 0, RtpPacket.DYNAMIC_PT, row.bytes)
-        log.debug(u'Send ROW FEC packet seq={0} snbase={1} LxD={2}x{3} trec={4} socket={5}'.format(
+        log.debug('Send ROW FEC packet seq={0} snbase={1} LxD={2}x{3} trec={4} socket={5}'.format(
                   row.sequence, row.snbase, row.L, row.D, row.timestamp_recovery, self.row_socket))
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         sock.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, 2)
-        sock.sendto(row_rtp.bytes, (self.row_socket[u'ip'], self.row_socket[u'port']))
+        sock.sendto(row_rtp.bytes, (self.row_socket['ip'], self.row_socket['port']))
 
     def on_reset(self, media, generator):
-        u"""
+        """
         Called by ``self=FecGenerator`` when the algorithm is resetted (an incoming media is out of sequence).
 
         Log a warning message.
@@ -152,5 +152,5 @@ class TwistedFecGenerator(DatagramProtocol):
         :param generator: The generator that fired this method / event
         :type generator: FecGenerator
         """
-        log.warning(u'Media seq={0} is out of sequence (expected {1}) : FEC algorithm resetted !'.format(
+        log.warning('Media seq={0} is out of sequence (expected {1}) : FEC algorithm resetted !'.format(
                     media.sequence, generator._media_sequence))

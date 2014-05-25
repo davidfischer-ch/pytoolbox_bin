@@ -35,21 +35,20 @@ from pytoolbox.subprocess import cmd
 
 
 def clone_starred():
-    u"""Iterate over repositories starred by someone and clone them."""
+    """Iterate over repositories starred by someone and clone them."""
 
     configure_unicode()
-    HELP_DELETE = u'Remove clones of unstarred repositories'
-    HELP_FETCH = u'Fetch already-cloned repositories'
-    HELP_OUTPUT = u'Clones directory'
-    HELP_USERNAME = u'Name of user whose stars you want to clone'
-    DEFAULT_OUTPUT = abspath(expanduser(u'~/github_starred'))
+    HELP_DELETE = 'Remove clones of unstarred repositories'
+    HELP_FETCH = 'Fetch already-cloned repositories'
+    HELP_OUTPUT = 'Clones directory'
+    HELP_USERNAME = 'Name of user whose stars you want to clone'
+    DEFAULT_OUTPUT = abspath(expanduser('~/github_starred'))
 
-    parser = ArgumentParser(
-        formatter_class=ArgumentDefaultsHelpFormatter, epilog=clone_starred.__doc__)
-    parser.add_argument(u'username', action=u'store', help=HELP_USERNAME)
-    parser.add_argument(u'-o', u'--output', action=u'store', help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
-    parser.add_argument(u'-d', u'--delete', action=u'store_true', help=HELP_DELETE, default=False)
-    parser.add_argument(u'-c', u'--fetch', action=u'store_true', help=HELP_FETCH, default=False)
+    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=clone_starred.__doc__)
+    parser.add_argument('username',       action='store',      help=HELP_USERNAME)
+    parser.add_argument('-o', '--output', action='store',      help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
+    parser.add_argument('-d', '--delete', action='store_true', help=HELP_DELETE, default=False)
+    parser.add_argument('-c', '--fetch',  action='store_true', help=HELP_FETCH,  default=False)
     args = parser.parse_args()
 
     output = abspath(expanduser(args.output))
@@ -60,20 +59,20 @@ def clone_starred():
     if args.delete:
         for name in os.listdir(output):
             if not name in starred_repositories:
-                print(u'Remove clone of unstarred repository {0}'.format(name))
+                print('Remove clone of unstarred repository {0}'.format(name))
                 shutil.rmtree(join(output, name))
 
     for name, repository in starred_repositories.iteritems():
         directory = join(output, name)
         if exists(directory):
             if args.fetch:
-                print(u'Fetching already cloned repository {0}'.format(repository.full_name))
-                cmd([u'git', u'fetch'], cwd=directory, log=print)
+                print('Fetching already cloned repository {0}'.format(repository.full_name))
+                cmd(['git', 'fetch'], cwd=directory, log=print)
             else:
-                print(u'Skip already cloned repository {0}'.format(repository.full_name))
+                print('Skip already cloned repository {0}'.format(repository.full_name))
         else:
-            print(u'Cloning repository {0}'.format(repository.full_name))
+            print('Cloning repository {0}'.format(repository.full_name))
             try:
-                cmd([u'git', u'clone', repository.clone_url, directory], log=print)
+                cmd(['git', 'clone', repository.clone_url, directory], log=print)
             except KeyboardInterrupt:
                 shutil.rmtree(directory, ignore_errors=True)

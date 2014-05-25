@@ -22,7 +22,8 @@
 #
 # Retrieved from https://github.com/davidfischer-ch/pytoolbox_bin.git
 
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from os.path import expanduser, join
 
-
-config_path = lambda *x: join(expanduser(u'~/.pytoolbox_bin'), *x)
+config_path = lambda *x: join(expanduser('~/.pytoolbox_bin'), *x)
