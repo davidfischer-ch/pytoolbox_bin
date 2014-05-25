@@ -31,11 +31,11 @@ from pytoolbox.logging import setup_logging
 from pytoolbox.network.ip import IPSocket
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter, FileType
 
-log = logging.getLogger(u'smpte2022lib')
+log = logging.getLogger('smpte2022lib')
 
 
 def socket_fec_generator():
-    u"""
+    """
     This is a working example utility using this class, this method will :
 
     * Parse arguments from command line
@@ -45,19 +45,19 @@ def socket_fec_generator():
     from .lib import SocketFecGenerator
 
     configure_unicode()
-    setup_logging(name=u'smpte2022lib', filename=None, console=True, level=logging.DEBUG)
-    log.info(u'Testing SocketFecGenerator with doctest')
+    setup_logging(name='smpte2022lib', filename=None, console=True, level=logging.DEBUG)
+    log.info('Testing SocketFecGenerator with doctest')
     doctest.testmod(verbose=False)
-    log.info(u'OK')
+    log.info('OK')
 
-    HELP_MEDIA   = u'Socket of input stream'
-    HELP_COL     = u'Socket of generated FEC column stream'
-    HELP_ROW     = u'Socket of generated FEC row stream'
-    HELP_L       = u'Horizontal size of the FEC matrix (columns)'
-    HELP_D       = u'Vertical size of the FEC matrix (rows)'
-    HELP_TIMEOUT = u'Set timeout for socket operations (in seconds)'
-    HELP_PROFILE = u'Set profiling output file (this enable profiling)'
-    HELP_STOP    = u'Automatic stop time (in seconds)'
+    HELP_MEDIA   = 'Socket of input stream'
+    HELP_COL     = 'Socket of generated FEC column stream'
+    HELP_ROW     = 'Socket of generated FEC row stream'
+    HELP_L       = 'Horizontal size of the FEC matrix (columns)'
+    HELP_D       = 'Vertical size of the FEC matrix (rows)'
+    HELP_TIMEOUT = 'Set timeout for socket operations (in seconds)'
+    HELP_PROFILE = 'Set profiling output file (this enable profiling)'
+    HELP_STOP    = 'Automatic stop time (in seconds)'
 
     dmedia = SocketFecGenerator.DEFAULT_MEDIA
     dcol = SocketFecGenerator.DEFAULT_COL
@@ -65,16 +65,16 @@ def socket_fec_generator():
 
     parser = ArgumentParser(
         formatter_class=ArgumentDefaultsHelpFormatter,
-        epilog=u'''This utility create SMPTE 2022-1 FEC streams from a sniffed source stream.
+        epilog='''This utility create SMPTE 2022-1 FEC streams from a sniffed source stream.
                    SMPTE 2022-1 help streaming systems to improve QoE of real-time RTP transmissions.''')
-    parser.add_argument(u'-m', u'--media',        type=IPSocket,      help=HELP_MEDIA,   default=dmedia)
-    parser.add_argument(u'-c', u'--col',          type=IPSocket,      help=HELP_COL,     default=dcol)
-    parser.add_argument(u'-r', u'--row',          type=IPSocket,      help=HELP_ROW,     default=drow)
-    parser.add_argument(u'-l',                    type=int,           help=HELP_L,       default=5)
-    parser.add_argument(u'-d',                    type=int,           help=HELP_D,       default=6)
-    parser.add_argument(u'-t', u'--timeout',      type=int,           help=HELP_TIMEOUT, nargs='?', default=None)
-    parser.add_argument(u'-s', u'--stop-time',    type=int,           help=HELP_STOP,    nargs='?', default=None)
-    parser.add_argument(u'-p', u'--profile',      type=FileType('w'), help=HELP_PROFILE, nargs='?', default=None)
+    parser.add_argument('-m', '--media',        type=IPSocket,      help=HELP_MEDIA,   default=dmedia)
+    parser.add_argument('-c', '--col',          type=IPSocket,      help=HELP_COL,     default=dcol)
+    parser.add_argument('-r', '--row',          type=IPSocket,      help=HELP_ROW,     default=drow)
+    parser.add_argument('-l',                   type=int,           help=HELP_L,       default=5)
+    parser.add_argument('-d',                   type=int,           help=HELP_D,       default=6)
+    parser.add_argument('-t', '--timeout',      type=int,           help=HELP_TIMEOUT, nargs='?', default=None)
+    parser.add_argument('-s', '--stop-time',    type=int,           help=HELP_STOP,    nargs='?', default=None)
+    parser.add_argument('-p', '--profile',      type=FileType('w'), help=HELP_PROFILE, nargs='?', default=None)
     args = parser.parse_args()
 
     def handle_stop_signal(SIGNAL, stack):
@@ -97,7 +97,7 @@ def socket_fec_generator():
 
 
 def twisted_fec_generator():
-    u"""
+    """
     This is a working example utility using this class, this method will :
 
     * Parse arguments from command line
@@ -108,17 +108,17 @@ def twisted_fec_generator():
     from .lib import TwistedFecGenerator
 
     configure_unicode()
-    setup_logging(name=u'smpte2022lib', filename=None, console=True, level=logging.DEBUG)
-    log.info(u'Testing TwistedFecGenerator with doctest')
+    setup_logging(name='smpte2022lib', filename=None, console=True, level=logging.DEBUG)
+    log.info('Testing TwistedFecGenerator with doctest')
     doctest.testmod(verbose=False)
-    log.info(u'OK')
+    log.info('OK')
 
-    HELP_MEDIA   = u'Socket of input stream'
-    HELP_COL     = u'Socket of generated FEC column stream'
-    HELP_ROW     = u'Socket of generated FEC row stream'
-    HELP_L       = u'Horizontal size of the FEC matrix (columns)'
-    HELP_D       = u'Vertical size of the FEC matrix (rows)'
-    HELP_PROFILE = u'Set profiling output file (this enable profiling)'
+    HELP_MEDIA   = 'Socket of input stream'
+    HELP_COL     = 'Socket of generated FEC column stream'
+    HELP_ROW     = 'Socket of generated FEC row stream'
+    HELP_L       = 'Horizontal size of the FEC matrix (columns)'
+    HELP_D       = 'Vertical size of the FEC matrix (rows)'
+    HELP_PROFILE = 'Set profiling output file (this enable profiling)'
 
     dmedia = TwistedFecGenerator.DEFAULT_MEDIA
     dcol = TwistedFecGenerator.DEFAULT_COL
@@ -126,18 +126,18 @@ def twisted_fec_generator():
 
     parser = ArgumentParser(
         formatter_class=ArgumentDefaultsHelpFormatter,
-        epilog=u'''This utility create SMPTE 2022-1 FEC streams from a sniffed source stream.
+        epilog='''This utility create SMPTE 2022-1 FEC streams from a sniffed source stream.
                    SMPTE 2022-1 help streaming systems to improve QoE of real-time RTP transmissions.''')
-    parser.add_argument(u'-m', u'--media',   type=IPSocket,      help=HELP_MEDIA,   default=dmedia)
-    parser.add_argument(u'-c', u'--col',     type=IPSocket,      help=HELP_COL,     default=dcol)
-    parser.add_argument(u'-r', u'--row',     type=IPSocket,      help=HELP_ROW,     default=drow)
-    parser.add_argument(u'-l',               type=int,           help=HELP_L,       default=5)
-    parser.add_argument(u'-d',               type=int,           help=HELP_D,       default=6)
-    parser.add_argument(u'-p', u'--profile', type=FileType('w'), help=HELP_PROFILE, nargs='?', default=None)
+    parser.add_argument('-m', '--media',   type=IPSocket,      help=HELP_MEDIA,   default=dmedia)
+    parser.add_argument('-c', '--col',     type=IPSocket,      help=HELP_COL,     default=dcol)
+    parser.add_argument('-r', '--row',     type=IPSocket,      help=HELP_ROW,     default=drow)
+    parser.add_argument('-l',              type=int,           help=HELP_L,       default=5)
+    parser.add_argument('-d',              type=int,           help=HELP_D,       default=6)
+    parser.add_argument('-p', '--profile', type=FileType('w'), help=HELP_PROFILE, nargs='?', default=None)
     args = parser.parse_args()
 
     def handle_stop_signal(SIGNAL, stack):
-        log.info(u'\nGenerator stopped\n')
+        log.info('\nGenerator stopped\n')
         reactor.stop()
 
     try:
@@ -145,7 +145,7 @@ def twisted_fec_generator():
         signal.signal(signal.SIGINT, handle_stop_signal)
 
         # FIXME port ?
-        TwistedFecGenerator(args.media[u'ip'], u'MyGenerator', args.col, args.row, args.l, args.d)
+        TwistedFecGenerator(args.media['ip'], 'MyGenerator', args.col, args.row, args.l, args.d)
         # Disabled otherwise multicast packets are received twice !
         # See ``sudo watch ip maddr show`` they will be 2 clients if uncommented :
         # reactor.run() vs -> reactor.listenMulticast(args.media['port'], generator, listenMultiple=True) <-

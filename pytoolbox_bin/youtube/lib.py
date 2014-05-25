@@ -26,5 +26,5 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 
 def remove_special_chars(filename):
-    return (filename.replace(u'?', u'').replace(u'"', u'').replace(u'/', u'-')
-                    .replace(u'|', u'-').replace(u':', u'-').replace(u'*', u'-'))
+    return (filename.replace('?', '').replace('"', '').replace('/', '-')
+                    .replace('|', '-').replace(':', '-').replace('*', '-'))
