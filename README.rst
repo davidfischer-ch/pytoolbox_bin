@@ -85,7 +85,7 @@ Here is list of the functionalities available through the command line (see all 
 :youtube-download-likes: Download the video you liked on YouTube_, can also convert them to AAC (songs).
 :socket-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Socket-based implementation.
 :twisted-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Twisted-based implementation.
-:isp-benchmark: based on tespeed_ and pygal_.
+:isp-benchmark: Benchmark your Internet connection and graph the speed over the time, based on tespeed_ and pygal_.
 
 ----
 

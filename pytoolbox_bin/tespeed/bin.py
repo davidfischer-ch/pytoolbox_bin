@@ -34,7 +34,7 @@ from .lib import graph, measure
 
 
 def isp_benchmark():
-    """Benchmark your Internet connection and graph the speed over the time."""
+    """Benchmark your Internet connection and graph the speed over the time, based on tespeed and pygal."""
 
     configure_unicode()
     setup_logging(name='isp_benchmark', filename=None, console=True, level=logging.DEBUG)
