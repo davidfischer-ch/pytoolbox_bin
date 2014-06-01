@@ -5,6 +5,13 @@ oauth2client
 git+git://github.com/davidfischer-ch/pafy.git#egg=pafy
 pillow>=2.2.1
 pyaml>=13.05.2
-pytoolbox[smpte2022]>=7.1.16-beta
+pygal
+pytoolbox[smpte2022]>=8.3.0-beta
+git+git://github.com/davidfischer-ch/tespeed.git#egg=tespeed
 twisted
 youtube-dl
+
+# For the PNG output of pygal
+cssselect
+CairoSVG
+tinycss

@@ -1,5 +1,7 @@
 .. _github: https://github.com
+.. _pygal: http://pygal.org/
 .. _pytoolbox: https://github.com/davidfischer-ch/pytoolbox
+.. _tespeed: https://github.com/davidfischer-ch/tespeed
 .. _youtube: https://youtube.com
 
 =============
@@ -35,7 +37,7 @@ How to install it (Python 2.7) ?
 Install some packages that are not handled by pip::
 
     sudo apt-get -y build-dep python-imaging
-    sudo apt-get install git-core python-dev python-pip python-pyexiv2
+    sudo apt-get install git-core libffi-dev python-dev python-pip python-pyexiv2
 
 Make sure that pip is up-to-date (PIPception)::
 
@@ -83,6 +85,7 @@ Here is list of the functionalities available through the command line (see all 
 :youtube-download-likes: Download the video you liked on YouTube_, can also convert them to AAC (songs).
 :socket-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Socket-based implementation.
 :twisted-fec-generator: Create SMPTE 2022-1 FEC streams from a sniffed source stream. Twisted-based implementation.
+:isp-benchmark: based on tespeed_ and pygal_.
 
 ----
 
