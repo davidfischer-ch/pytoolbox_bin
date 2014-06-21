@@ -24,6 +24,13 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
+import sys
 from os.path import expanduser, join
 
 config_path = lambda *x: join(expanduser('~/.pytoolbox_bin'), *x)
+
+
+def error(msg, exit_code=None):
+    print(msg, file=sys.stderr)
+    if exit_code is not None:
+        sys.exit(exit_code)
