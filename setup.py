@@ -69,8 +69,8 @@ setup(name='pytoolbox_bin',
       license='EUPL 1.1',
       classifiers=filter(None, classifiers.split('\n')),
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
-      dependency_links=[str(requirement.url) for requirement in parse_requirements('requirements.txt')],
-      install_requires=[str(requirement.req) for requirement in parse_requirements('requirements.txt')],
+      dependency_links=[str(r.url) for r in parse_requirements('requirements.txt') if r.url],
+      install_requires=[str(r.req) for r in parse_requirements('requirements.txt') if r.req],
       tests_require=['coverage', 'mock', 'nose'],
       entry_points={
           'console_scripts': [
