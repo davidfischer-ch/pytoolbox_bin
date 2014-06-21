@@ -24,18 +24,19 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import argparse, httplib2, os, json, sys
+import argparse, httplib2, json, os, sys
 from codecs import open
 from apiclient import discovery
 from oauth2client import client, file, tools
-from os.path import abspath, expanduser, join, splitext
+from os.path import abspath, expanduser, join
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs, try_remove
 from pytoolbox.network.http import download
+from pytoolbox.serialization import object2json
 from youtube_dl.YoutubeDL import YoutubeDL
 
-from .lib import remove_special_chars
-from ..common import config_path
+from .lib import Like
+from ..common import error, config_path
 
 
 def download_likes():
@@ -43,16 +44,16 @@ def download_likes():
 
     configure_unicode()
     HELP_OUTPUT, DEFAULT_OUTPUT = 'Download directory', abspath(expanduser('~/youtube_likes'))
-    HELP_UPDATE, DEFAULT_UPDATE = 'Request the likes with the YouTube API', True
+    HELP_UPDATE = 'Request the likes with the YouTube API'
     HELP_THUMBNAIL, DEFAULT_THUMBNAIL = 'Download the thumbnails', False
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
                                      epilog=download_likes.__doc__, parents=[tools.argparser])
-    parser.add_argument('-o', '--output',    action='store',      help=HELP_OUTPUT,    default=DEFAULT_OUTPUT)
-    parser.add_argument('-t', '--thumbnail', action='store_true', help=HELP_THUMBNAIL, default=DEFAULT_THUMBNAIL)
-    parser.add_argument('-u', '--update',    action='store_true', help=HELP_UPDATE,    default=DEFAULT_UPDATE)
+    parser.add_argument('-o', '--output',    action='store',       help=HELP_OUTPUT,    default=DEFAULT_OUTPUT)
+    parser.add_argument('-t', '--thumbnail', action='store_true',  help=HELP_THUMBNAIL, default=DEFAULT_THUMBNAIL)
+    parser.add_argument('-u', '--update',    action='store_false', help=HELP_UPDATE)
     args = parser.parse_args(sys.argv[1:])
 
-    output_path = lambda *x: join(abspath(expanduser(args.output)), *x)
+    output_directory = abspath(expanduser(args.output))
     try_makedirs(config_path(''))
 
     # Name of a file containing the OAuth 2.0 token, <https://cloud.google.com/console#/project/947551927891/apiui>
@@ -84,14 +85,17 @@ def download_likes():
     if not args.update:
         try:
             with open(likes_filename, 'r', 'utf-8') as f:
-                likes = json.loads(f.read())
+                likes = [Like(**like_dict) for like_dict in json.loads(f.read())]
         except IOError:
             pass
 
-    videos_names = set()
-    for root, dirnames, filenames in os.walk(output_path()):
-        for filename in filenames:
-            videos_names.add(unicode(splitext(filename)[0], 'utf-8'))
+    local_likes = {}
+    for root, dirnames, filenames in os.walk(output_directory):
+        for filename in (unicode(f, 'utf-8') for f in filenames):
+            like = Like.from_filename(join(root, filename))
+            if not like:
+                error('Unable to parse components of filename "{0}"'.format(filename), 1)
+            local_likes.setdefault(like.id, like)
 
     if not likes:
         try:
@@ -100,40 +104,47 @@ def download_likes():
                 print('Read page {0}'.format(page))
                 response = service.videos().list(part='id,snippet', myRating='like', maxResults=50,
                                                  pageToken=page).execute()
-                likes += response['items']
+                likes += [Like.from_api_response(item, output_directory) for item in response['items']]
                 page = response.get('nextPageToken')
                 if not page:
                     break
             print('Retrieved {0} likes from your activity in YouTube.'.format(len(likes)))
             with open(likes_filename, 'w', 'utf-8') as f:
-                f.write(json.dumps(likes))
+                f.write(object2json(likes, include_properties=False))
         except client.AccessTokenRefreshError:
-            print('The credentials have been revoked or expired, please re-run the application to re-authorize')
+            error('The credentials have been revoked or expired, please re-run the application to re-authorize', 2)
 
     deleted_ids = set()
+    errored_ids = set()
+    downloaded = renamed = 0
     for like in likes:
-        video_id = like['id']
-        video_title = like['snippet']['title']
-        video_name = remove_special_chars(video_title) + '_' + video_id
-
-        if video_name in videos_names:
-            print('Skip already downloaded video {0}'.format(video_title))
-        elif 'Deleted video' in video_name:
-            deleted_ids.add(video_id)
+        local_like = local_likes.get(like.id)
+        if local_like:
+            like.directory = local_like.directory
+            if like.video != local_like.video:
+                print('Rename already downloaded video "{0.title}" to "{1.title}"'.format(local_like, like))
+                renamed += 1
+                os.rename(local_like.video, like.video)
+            else:
+                print('Skip already downloaded video "{0.title}"'.format(local_like))
+        elif 'Deleted video' in like.title:
+            deleted_ids.add(like.id)
         else:
-            print('Downloading video {0}'.format(video_title))
-            video_path, thumbnail_path = output_path(video_name + '.mp4'), output_path(video_name + '.jpg')
-            ydl = YoutubeDL({'outtmpl': video_path})
+            print('Downloading video "{0.title}"'.format(like))
+            ydl = YoutubeDL({'outtmpl': like.video})
             ydl.add_default_info_extractors()
             try:
-                ydl.download([video_id])
+                ydl.download([like.id])
                 if args.thumbnail:
-                    download(like['snippet']['thumbnails']['high']['url'], thumbnail_path)
+                    download(like.thumbnail_url, like.thumbnail)
+                downloaded += 1
             except Exception as e:
-                print('Download failed, reason: {0}'.format(repr(e)), file=sys.stderr)
-                try_remove(video_path)
+                error('Download failed, reason: {0}'.format(repr(e)), None)
+                errored_ids.add(like.id)
+                try_remove(like.video)
                 if args.thumbnail:
-                    try_remove(thumbnail_path)
+                    try_remove(like.thumbnail)
 
-    print('Successfully downloaded {0} likes!'.format(len(likes)))
+    print('Successfully processed {0} likes! (renamed {1} and downloaded {2})'.format(len(likes), renamed, downloaded))
     print('There are {0} deleted likes: {1}'.format(len(deleted_ids), deleted_ids))
+    print('There are {0} error-ed likes: {1}'.format(len(errored_ids), errored_ids))
