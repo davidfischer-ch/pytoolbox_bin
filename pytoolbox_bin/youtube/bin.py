@@ -90,9 +90,9 @@ def download_likes():
             pass
 
     local_likes = {}
-    for root, dirnames, filenames in os.walk(output_directory):
+    for dirpath, dirnames, filenames in os.walk(output_directory):
         for filename in (unicode(f, 'utf-8') for f in filenames):
-            like = Like.from_filename(join(root, filename))
+            like = Like.from_filename(join(dirpath, filename))
             if not like:
                 error('Unable to parse components of filename "{0}"'.format(filename), 1)
             local_likes.setdefault(like.id, like)
