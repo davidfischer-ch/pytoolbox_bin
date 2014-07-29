@@ -1,5 +1,5 @@
 
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 
 #**********************************************************************************************************************#
 #                    PYTOOLBOX BIN - PERSONAL UTILITY SCRIPTS BASED ON PYTOOLBOX AND OTHER GOODIES
