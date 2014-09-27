@@ -49,8 +49,13 @@ class Like(object):
 
     @classmethod
     def from_api_response(cls, response, directory):
+        thumbnails = response['snippet'].get('thumbnails')
         return cls(id=response['id'], title=response['snippet']['title'], directory=directory,
-                   thumbnail_url=response['snippet']['thumbnails']['high']['url'])
+                   thumbnail_url=thumbnails['high']['url'] if thumbnails else None)
+
+    @property
+    def deleted(self):
+        return self.title == 'Deleted video'
 
     @classmethod
     def from_filename(cls, filename):
