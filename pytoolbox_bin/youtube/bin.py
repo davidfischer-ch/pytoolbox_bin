@@ -118,32 +118,33 @@ def download_likes():
     errored_ids = set()
     downloaded = renamed = 0
     for like in likes:
-        local_like = local_likes.get(like.id)
-        if local_like:
-            like.directory = local_like.directory
-            if like.video != local_like.video:
-                print('Rename already downloaded video "{0.title}" to "{1.title}"'.format(local_like, like))
-                renamed += 1
-                os.rename(local_like.video, like.video)
-            else:
-                print('Skip already downloaded video "{0.title}"'.format(local_like))
-        elif 'Deleted video' in like.title:
+        if like.deleted:
             deleted_ids.add(like.id)
         else:
-            print('Downloading video "{0.title}"'.format(like))
-            ydl = YoutubeDL({'outtmpl': like.video})
-            ydl.add_default_info_extractors()
-            try:
-                ydl.download([like.id])
-                if args.thumbnail:
-                    download(like.thumbnail_url, like.thumbnail)
-                downloaded += 1
-            except Exception as e:
-                error('Download failed, reason: {0}'.format(repr(e)), None)
-                errored_ids.add(like.id)
-                try_remove(like.video)
-                if args.thumbnail:
-                    try_remove(like.thumbnail)
+            local_like = local_likes.get(like.id)
+            if local_like:
+                like.directory = local_like.directory
+                if like.video != local_like.video:
+                    print('Rename already downloaded video "{0.title}" to "{1.title}"'.format(local_like, like))
+                    renamed += 1
+                    os.rename(local_like.video, like.video)
+                else:
+                    print('Skip already downloaded video "{0.title}"'.format(local_like))
+            else:
+                print('Downloading video "{0.title}"'.format(like))
+                ydl = YoutubeDL({'outtmpl': like.video})
+                ydl.add_default_info_extractors()
+                try:
+                    ydl.download([like.id])
+                    if args.thumbnail:
+                        download(like.thumbnail_url, like.thumbnail)
+                    downloaded += 1
+                except Exception as e:
+                    error('Download failed, reason: {0}'.format(repr(e)), None)
+                    errored_ids.add(like.id)
+                    try_remove(like.video)
+                    if args.thumbnail:
+                        try_remove(like.thumbnail)
 
     print('Successfully processed {0} likes! (renamed {1} and downloaded {2})'.format(len(likes), renamed, downloaded))
     print('There are {0} deleted likes: {1}'.format(len(deleted_ids), deleted_ids))
