@@ -32,7 +32,7 @@ from os.path import abspath, expanduser, join
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs, try_remove
 from pytoolbox.network.http import download
-from pytoolbox.serialization import object2json
+from pytoolbox.serialization import object_to_json
 from youtube_dl.YoutubeDL import YoutubeDL
 
 from .lib import Like
@@ -110,7 +110,7 @@ def download_likes():
                     break
             print('Retrieved {0} likes from your activity in YouTube.'.format(len(likes)))
             with open(likes_filename, 'w', 'utf-8') as f:
-                f.write(object2json(likes, include_properties=False))
+                f.write(object_to_json(likes, include_properties=False))
         except client.AccessTokenRefreshError:
             error('The credentials have been revoked or expired, please re-run the application to re-authorize', 2)
 
