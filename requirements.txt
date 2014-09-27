@@ -6,7 +6,7 @@ oauth2client
 pillow>=2.2.1
 pyaml>=13.05.2
 pygal
-pytoolbox[smpte2022]>=8.3.0-beta,<9.0.0-beta
+pytoolbox[smpte2022]>=9.0.0-beta,<10.0.0
 -e git://github.com/davidfischer-ch/tespeed.git#egg=tespeed
 twisted
 youtube-dl
