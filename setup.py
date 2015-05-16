@@ -83,7 +83,8 @@ setup(name='pytoolbox_bin',
               'youtube-download-likes=pytoolbox_bin.youtube.bin:download_likes',
               'socket-fec-generator=pytoolbox_bin.smpte2022.bin:socket_fec_generator',
               'twisted-fec-generator=pytoolbox_bin.smpte2022.bin:twisted_fec_generator',
-              'isp-benchmark=pytoolbox_bin.tespeed.bin:isp_benchmark'
+              'isp-benchmark=pytoolbox_bin.tespeed.bin:isp_benchmark',
+              'virtualenv-relocate=pytoolbox_bin.miscellaneous.virtualenv:relocate'
           ]
       },
       # Thanks to https://github.com/graingert/django-browserid/commit/46c763f11f76b2f3ba365b164196794a37494f44
