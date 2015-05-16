@@ -64,7 +64,7 @@ Operating System :: Unix
 """
 
 setup(name='pytoolbox_bin',
-      version='0.3.2-beta',
+      version='0.3.3',
       packages=find_packages(exclude=['tests']),
       description='Personal utility scripts based on pytoolbox and other goodies.',
       long_description=open('README.rst', 'r', encoding='utf-8').read(),
