@@ -25,9 +25,14 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import sys
+import functools, sys
 from codecs import open
 from pip.req import parse_requirements
+try:
+    from pip.download import PipSession
+    parse_requirements = functools.partial(parse_requirements, session=PipSession())
+except ImportError:
+    pass
 from setuptools import setup, find_packages
 
 # https://pypi.python.org/pypi?%3Aaction=list_classifiers
@@ -69,7 +74,7 @@ setup(name='pytoolbox_bin',
       license='EUPL 1.1',
       classifiers=filter(None, classifiers.split('\n')),
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
-      dependency_links=[str(r.url) for r in parse_requirements('requirements.txt') if r.url],
+      dependency_links=[str(r.url) for r in parse_requirements('requirements.txt') if getattr(r, 'url', None)],
       install_requires=[str(r.req) for r in parse_requirements('requirements.txt') if r.req],
       tests_require=['coverage', 'mock', 'nose'],
       entry_points={
