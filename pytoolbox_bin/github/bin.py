@@ -27,7 +27,6 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 import os, shutil
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from github3 import iter_starred
-from os.path import abspath, exists, expanduser, join
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs
 from pytoolbox.subprocess import cmd
@@ -41,7 +40,7 @@ def clone_starred():
     HELP_FETCH = 'Fetch already-cloned repositories'
     HELP_OUTPUT = 'Clones directory'
     HELP_USERNAME = 'Name of user whose stars you want to clone'
-    DEFAULT_OUTPUT = abspath(expanduser('~/github_starred'))
+    DEFAULT_OUTPUT = os.path.abspath(os.path.expanduser('~/github_starred'))
 
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=clone_starred.__doc__)
     parser.add_argument('username',       action='store',      help=HELP_USERNAME)
@@ -50,7 +49,7 @@ def clone_starred():
     parser.add_argument('-c', '--fetch',  action='store_true', help=HELP_FETCH,  default=False)
     args = parser.parse_args()
 
-    output = abspath(expanduser(args.output))
+    output = os.path.abspath(os.path.expanduser(args.output))
     try_makedirs(output)
 
     starred_repositories = {r.name: r for r in iter_starred(args.username)}
@@ -59,11 +58,11 @@ def clone_starred():
         for name in os.listdir(output):
             if not name in starred_repositories:
                 print('Remove clone of unstarred repository {0}'.format(name))
-                shutil.rmtree(join(output, name))
+                shutil.rmtree(os.path.join(output, name))
 
     for name, repository in starred_repositories.iteritems():
-        directory = join(output, name)
-        if exists(directory):
+        directory = os.path.join(output, name)
+        if os.path.exists(directory):
             if args.fetch:
                 print('Fetching already cloned repository {0}'.format(repository.full_name))
                 cmd(['git', 'fetch'], cwd=directory, log=print)

@@ -24,8 +24,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import json, logging, pygal, re, time
-from os.path import splitext
+import json, logging, os, pygal, re, time
 from pytoolbox.datetime import datetime_now
 from subprocess import check_output
 
@@ -48,7 +47,7 @@ def tespeed():
 
 
 def graph(results_file, width=1920, height=1080):
-    name = splitext(results_file.name)[0]
+    name = os.path.splitext(results_file.name)[0]
     results = sorted(json.loads(results_file.read()), key=lambda x: x['date'])
 
     dates = [r['date'] for r in results]

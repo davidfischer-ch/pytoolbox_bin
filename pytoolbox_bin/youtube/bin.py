@@ -28,7 +28,6 @@ import argparse, httplib2, json, os, sys
 from codecs import open
 from apiclient import discovery
 from oauth2client import client, file, tools
-from os.path import abspath, expanduser, join
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs, try_remove
 from pytoolbox.network.http import download
@@ -43,7 +42,7 @@ def download_likes():
     u"""Download and convert to AAC your favorite songs."""
 
     configure_unicode()
-    HELP_OUTPUT, DEFAULT_OUTPUT = 'Download directory', abspath(expanduser('~/youtube_likes'))
+    HELP_OUTPUT, DEFAULT_OUTPUT = 'Download directory', os.path.abspath(os.path.expanduser('~/youtube_likes'))
     HELP_UPDATE = 'Request the likes with the YouTube API'
     HELP_THUMBNAIL, DEFAULT_THUMBNAIL = 'Download the thumbnails', False
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -53,7 +52,7 @@ def download_likes():
     parser.add_argument('-u', '--update',    action='store_false', help=HELP_UPDATE)
     args = parser.parse_args(sys.argv[1:])
 
-    output_directory = abspath(expanduser(args.output))
+    output_directory = os.path.abspath(os.path.expanduser(args.output))
     try_makedirs(config_path(''))
 
     # Name of a file containing the OAuth 2.0 token, <https://cloud.google.com/console#/project/947551927891/apiui>
@@ -92,7 +91,7 @@ def download_likes():
     local_likes = {}
     for dirpath, dirnames, filenames in os.walk(output_directory):
         for filename in (unicode(f, 'utf-8') for f in filenames):
-            like = Like.from_filename(join(dirpath, filename))
+            like = Like.from_filename(os.path.join(dirpath, filename))
             if not like:
                 error('Unable to parse components of filename "{0}"'.format(filename), 1)
             local_likes.setdefault(like.id, like)
