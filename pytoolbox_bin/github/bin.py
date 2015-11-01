@@ -34,7 +34,7 @@ from pytoolbox.subprocess import git_clone_or_pull
 
 def clone_it(directory, name, repository):
     directory = os.path.join(directory, name)
-    print('Cloning/updating repository {0}'.format(repository.full_name))
+    print('Cloning/updating repository {0.full_name}'.format(repository))
     try:
         git_clone_or_pull(directory, repository.clone_url)
     except KeyboardInterrupt:
