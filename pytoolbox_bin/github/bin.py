@@ -32,9 +32,9 @@ from pytoolbox.filesystem import try_makedirs, try_remove
 from pytoolbox.subprocess import git_clone_or_pull
 
 
-def clone_it(directory, name, repository):
-    directory = os.path.join(directory, name)
+def clone_it(directory, repository):
     print('Cloning/updating repository {0.full_name}'.format(repository))
+    directory = os.path.join(directory, repository.full_name)
     try:
         git_clone_or_pull(directory, repository.clone_url)
     except KeyboardInterrupt:
@@ -57,17 +57,21 @@ def clone_starred():
     output = os.path.abspath(os.path.expanduser(args.output))
     try_makedirs(output)
 
-    starred_repositories = {r.name: r for r in github3.starred_by(args.username)}
+    starred_repositories = {r.full_name: r for r in github3.starred_by(args.username)}
 
     if args.delete:
-        for name in os.listdir(output):
-            if not name in starred_repositories:
-                print('Remove clone of unstarred repository {0}'.format(name))
-                try_remove(os.path.join(output, name), recursive=True)
+        for dirpath, dirnames, filenames in os.walk(output):
+            full_name = os.path.relpath(dirpath, output)
+            if full_name.count(os.path.sep) == 1:
+                if not full_name in starred_repositories:
+                    print('Remove clone of unstarred repository {0}'.format(full_name))
+                    try_remove(os.path.join(output, full_name), recursive=True)
+                dirnames.clear()
 
     pool = multiprocessing.Pool(processes=args.processes)
-    for name, repository in starred_repositories.iteritems():
-        pool.apply_async(clone_it, args=(output, name, repository))
+    for repository in starred_repositories.itervalues():
+        pool.apply_async(clone_it, args=(output, repository))
     pool.close()
     pool.join()
-    print('Work done!')
+
+    print('Job done!')
