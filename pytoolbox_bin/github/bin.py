@@ -24,53 +24,50 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import os, shutil
-from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
-from github3 import iter_starred
+import argparse, multiprocessing, os
+
+import github3
 from pytoolbox.encoding import configure_unicode
-from pytoolbox.filesystem import try_makedirs
-from pytoolbox.subprocess import cmd
+from pytoolbox.filesystem import try_makedirs, try_remove
+from pytoolbox.subprocess import git_clone_or_pull
+
+
+def clone_it(directory, name, repository):
+    directory = os.path.join(directory, name)
+    print('Cloning/updating repository {0}'.format(repository.full_name))
+    try:
+        git_clone_or_pull(directory, repository.clone_url)
+    except KeyboardInterrupt:
+        try_remove(directory, recursive=True)
 
 
 def clone_starred():
     """Iterate over repositories starred by someone and clone them."""
 
     configure_unicode()
-    HELP_DELETE = 'Remove clones of unstarred repositories'
-    HELP_FETCH = 'Fetch already-cloned repositories'
-    HELP_OUTPUT = 'Clones directory'
-    HELP_USERNAME = 'Name of user whose stars you want to clone'
-    DEFAULT_OUTPUT = os.path.abspath(os.path.expanduser('~/github_starred'))
-
-    parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter, epilog=clone_starred.__doc__)
-    parser.add_argument('username',       action='store',      help=HELP_USERNAME)
-    parser.add_argument('-o', '--output', action='store',      help=HELP_OUTPUT, default=DEFAULT_OUTPUT)
-    parser.add_argument('-d', '--delete', action='store_true', help=HELP_DELETE, default=False)
-    parser.add_argument('-c', '--fetch',  action='store_true', help=HELP_FETCH,  default=False)
+    DEFAULT_OUTPUT = os.path.abspath(os.path.expanduser('~/github/stars'))
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+                                     epilog=clone_starred.__doc__)
+    parser.add_argument('username',          help='Name of user whose stars you want to clone')
+    parser.add_argument('-o', '--output',    help='Clones directory',    default=DEFAULT_OUTPUT)
+    parser.add_argument('-p', '--processes', help='Number of processes', type=int, default=min(4, os.cpu_count() * 2))
+    parser.add_argument('-d', '--delete', action='store_true', help='Remove clones of unstarred repositories')
     args = parser.parse_args()
 
     output = os.path.abspath(os.path.expanduser(args.output))
     try_makedirs(output)
 
-    starred_repositories = {r.name: r for r in iter_starred(args.username)}
+    starred_repositories = {r.name: r for r in github3.starred_by(args.username)}
 
     if args.delete:
         for name in os.listdir(output):
             if not name in starred_repositories:
                 print('Remove clone of unstarred repository {0}'.format(name))
-                shutil.rmtree(os.path.join(output, name))
+                try_remove(os.path.join(output, name), recursive=True)
 
+    pool = multiprocessing.Pool(processes=args.processes)
     for name, repository in starred_repositories.iteritems():
-        directory = os.path.join(output, name)
-        if os.path.exists(directory):
-            if args.fetch:
-                print('Fetching already cloned repository {0}'.format(repository.full_name))
-                cmd(['git', 'fetch'], cwd=directory, log=print)
-            else:
-                print('Skip already cloned repository {0}'.format(repository.full_name))
-        else:
-            print('Cloning repository {0}'.format(repository.full_name))
-            try:
-                cmd(['git', 'clone', repository.clone_url, directory], log=print)
-            except KeyboardInterrupt:
-                shutil.rmtree(directory, ignore_errors=True)
+        pool.apply_async(clone_it, args=(output, name, repository))
+    pool.close()
+    pool.join()
+    print('Work done!')
