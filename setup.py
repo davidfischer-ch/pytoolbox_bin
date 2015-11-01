@@ -63,6 +63,8 @@ Operating System :: MacOS :: MacOS X
 Operating System :: Unix
 """
 
+requirements = [r.req for r in parse_requirements('requirements.txt') if r.req]
+
 setup(name='pytoolbox_bin',
       version='0.3.3',
       packages=find_packages(exclude=['tests']),
@@ -74,8 +76,8 @@ setup(name='pytoolbox_bin',
       license='EUPL 1.1',
       classifiers=filter(None, classifiers.split('\n')),
       keywords=['download', 'gdata', 'github', 'songs', 'youtube'],
-      dependency_links=[str(r.url) for r in parse_requirements('requirements.txt') if getattr(r, 'url', None)],
-      install_requires=[str(r.req) for r in parse_requirements('requirements.txt') if r.req],
+      # dependency_links=[r.url for r in requirements if r.url],
+      install_requires=[str(r) for r in requirements if str(r) not in ('tespeed',)],
       tests_require=['coverage', 'mock', 'nose'],
       entry_points={
           'console_scripts': [
