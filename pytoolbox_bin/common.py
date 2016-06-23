@@ -4,7 +4,9 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import os, sys
 
-config_path = lambda *x: os.path.join(os.path.expanduser('~/.pytoolbox_bin'), *x)
+
+def config_path(*args):
+    return os.path.join(os.path.expanduser('~/.pytoolbox_bin'), *args)
 
 
 def error(msg, exit_code=None):
