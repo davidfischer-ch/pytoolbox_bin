@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 def main():
     from pytoolbox.unittest import runtests
-    return runtests(__file__, cover_packages=[u'pytoolbox_bin'], packages=[u'pytoolbox_bin'])
+    return runtests(__file__, cover_packages=['pytoolbox_bin'], packages=['pytoolbox_bin'])
 
-if __name__ == u'__main__':
+if __name__ == '__main__':
     main()
