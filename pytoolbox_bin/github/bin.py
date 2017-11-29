@@ -2,21 +2,26 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-import argparse, multiprocessing, os
+import argparse, multiprocessing, os, re
 
 import github3
 from pytoolbox.encoding import configure_unicode
 from pytoolbox.filesystem import try_makedirs, try_remove
-from pytoolbox.subprocess import git_clone_or_pull
+from pytoolbox.subprocess import cmd, git_clone_or_pull
 
 
-def clone_it(directory, repository):
+def clone_it(repository):
     print('Cloning/updating repository {0.full_name}'.format(repository))
-    directory = os.path.join(directory, repository.full_name)
     try:
-        git_clone_or_pull(directory, repository.clone_url)
+        git_clone_or_pull(repository.directory, repository.clone_url)
     except KeyboardInterrupt:
-        try_remove(directory, recursive=True)
+        try_remove(repository.directory, recursive=True)
+
+
+def has_contributed_to(repository, strings):
+    """Iterate over local repositories and count commits from given author."""
+    log = cmd(['git', 'log'], cwd=repository.directory)['stdout']
+    return bool(re.search('|'.join(strings).encode('utf-8'), log))
 
 
 def clone_starred():
@@ -32,10 +37,15 @@ def clone_starred():
     parser.add_argument('-d', '--delete', action='store_true', help='Remove clones of unstarred repositories')
     args = parser.parse_args()
 
+    me = ['davidfischer-ch', 'David Fischer', 'david.fischer.ch@gmail.com']
     output = os.path.abspath(os.path.expanduser(args.output))
     try_makedirs(output)
 
-    starred_repositories = {r.full_name: r for r in github3.starred_by(args.username)}
+    def add_directory(repository):
+        repository.directory = os.path.join(output, repository.full_name)
+        return repository
+
+    starred_repositories = {r.full_name: add_directory(r) for r in github3.starred_by(args.username)}
 
     if args.delete:
         for dirpath, dirnames, filenames in os.walk(output):
@@ -46,9 +56,15 @@ def clone_starred():
                     try_remove(os.path.join(output, full_name), recursive=True)
                 dirnames.clear()
 
+    contributed_repositories = [r for r in starred_repositories.itervalues() if has_contributed_to(r, me)]
+    print(os.linesep.join(sorted(r.full_name for r in contributed_repositories)))
+    print('You contributed to {0} of the {1} repositories you starred!'.format(
+        len(contributed_repositories), len(starred_repositories)
+    ))
+
+    return
     pool = multiprocessing.Pool(processes=args.processes)
-    for repository in starred_repositories.itervalues():
-        pool.apply_async(clone_it, args=(output, repository))
+    pool.map_async(clone_it, starred_repositories.itervalues())
     pool.close()
     pool.join()
 
